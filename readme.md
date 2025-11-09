@@ -30,11 +30,13 @@ By creating this application, I would like to:
 
 ## Tech stack
 
-- FastAPI / Python backend
-- SQLite or Postgres data layer
-- Data abstraction layer with validation like Marshmallow
+- Backend:
+  - FastAPI / Python backend
+  - SQLite data layer
+  - Pydantic
+  - Alembic
 - React frontend
-  - ES6 or Typescript?
+  - ES6 or Typescript tbd
 
 # Models
 

@@ -38,3 +38,18 @@ class JobApplicationModel(Base):
     source_url = Column(String, nullable=True)
     stage_id = Column(Integer, nullable=False)
     application_datetime = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Note(Base):
+    __tablename__ = "notes"
+    notes_id = Column(Integer, primary_key=True, index=True)
+    job_app_id = Column(Integer, nullable=False)
+    datestamp = Column(DateTime(timezone=True), server_default=func.now())
+    notes = Column(String, nullable=False)
+
+
+class Stage(Base):
+    __tablename__ = "stages"
+    stage_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    is_deleted = Column(Boolean, default=False)
