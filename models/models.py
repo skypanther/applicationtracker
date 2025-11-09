@@ -40,7 +40,7 @@ class JobApplicationModel(Base):
     application_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
 
-class Note(Base):
+class NoteModel(Base):
     __tablename__ = "notes"
     notes_id = Column(Integer, primary_key=True, index=True)
     job_app_id = Column(Integer, nullable=False)
@@ -48,7 +48,7 @@ class Note(Base):
     notes = Column(String, nullable=False)
 
 
-class Stage(Base):
+class StageModel(Base):
     __tablename__ = "stages"
     stage_id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)

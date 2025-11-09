@@ -7,7 +7,6 @@ from schemas.job_application import (
     JobApplicationSchema,
     JobApplicationCreate,
     JobApplicationUpdate,
-    JobApplicationDelete,
 )
 
 
