@@ -1,0 +1,76 @@
+from typing import Any, Dict, Optional, Union
+from fastapi import HTTPException
+
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+
+from controllers.crud_base import CRUDBase
+from models.models import JobApplicationModel
+from schemas.job_application import (
+    JobApplicationCreate,
+    JobApplicationUpdate,
+    JobApplicationDelete,
+)
+
+
+class CRUDJobApp(
+    CRUDBase[
+        JobApplicationModel,
+        JobApplicationCreate,
+        JobApplicationUpdate,
+        JobApplicationDelete,
+    ]
+):
+    def get_job_applications(self, db: Session) -> list[JobApplicationModel]:
+        # Returns all job applications, not those for a specific company
+        job_apps_result = super().get_multi(db, skip=0, limit=1000)
+        job_apps = []
+        for job_app_model in job_apps_result:
+            job_apps.append(job_app_model)
+        return job_apps
+
+    def get_job_apps_by_company_id(
+        self, db: Session, *, company_id: int
+    ) -> list[JobApplicationModel]:
+        job_apps_result = db.query(self.model).filter(
+            self.model.company_id == company_id
+        )
+        job_models = []
+        for job_model in job_apps_result:
+            job_models.append(job_model)
+        return job_models
+
+    def get_job_app_by_id(self, db: Session, *, job_app_id: int) -> JobApplicationModel:
+        job_app_result = super().get_by_id(db, id=job_app_id)
+        return job_app_result
+
+    def create_job_application(
+        self, db: Session, *, job_app_to_create: JobApplicationCreate
+    ) -> Optional[JobApplicationModel]:
+        try:
+            job_app_model = super().create(db, obj_in=job_app_to_create)
+        except IntegrityError as err:
+            raise HTTPException(
+                status_code=400,
+                detail=err,
+            )
+        return job_app_model
+
+    def update_job_app(
+        self,
+        db: Session,
+        *,
+        job_app_obj: JobApplicationModel,
+        updated_job_app_obj: Union[JobApplicationUpdate, Dict[str, Any]],
+    ) -> JobApplicationModel:
+        job_app_model = super().update(
+            db, db_obj=job_app_obj, obj_in=updated_job_app_obj
+        )
+        return job_app_model
+
+    def remove_job_app(self, db: Session, *, job_app_id: int) -> JobApplicationModel:
+        job_app_model = super().remove(db, id=job_app_id)
+        return job_app_model
+
+
+crud_job_app = CRUDJobApp(JobApplicationModel)
