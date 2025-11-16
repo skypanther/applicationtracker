@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from controllers.crud_jobapp import crud_job_app
-from database import get_db
-from schemas.job_application import (
+from ..controllers.crud_jobapp import crud_job_app
+from ..database import get_db
+from ..schemas.job_application import (
     JobApplicationSchema,
     JobApplicationCreate,
     JobApplicationUpdate,

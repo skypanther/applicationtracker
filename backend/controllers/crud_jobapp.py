@@ -4,9 +4,9 @@ from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from controllers.crud_base import CRUDBase
-from models.models import JobApplicationModel
-from schemas.job_application import (
+from .crud_base import CRUDBase
+from ..models.models import JobApplicationModel
+from ..schemas.job_application import (
     JobApplicationCreate,
     JobApplicationUpdate,
     JobApplicationDelete,

@@ -5,9 +5,9 @@ from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from controllers.crud_base import CRUDBase
-from models.models import CompanyModel
-from schemas.company import CompanyCreate, CompanyUpdate, CompanyDelete
+from .crud_base import CRUDBase
+from ..models.models import CompanyModel
+from ..schemas.company import CompanyCreate, CompanyUpdate, CompanyDelete
 
 
 class CRUDCompany(CRUDBase[CompanyModel, CompanyCreate, CompanyUpdate, CompanyDelete]):

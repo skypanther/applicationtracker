@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from controllers.crud_stage import crud_stage
-from database import get_db
-from schemas.stages import (
+from ..controllers.crud_stage import crud_stage
+from ..database import get_db
+from ..schemas.stages import (
     StagesSchema,
     StagesCreate,
     StagesUpdate,

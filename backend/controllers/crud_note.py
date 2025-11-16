@@ -4,9 +4,9 @@ from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from controllers.crud_base import CRUDBase
-from models.models import NoteModel
-from schemas.notes import (
+from .crud_base import CRUDBase
+from ..models.models import NoteModel
+from ..schemas.notes import (
     NotesCreate,
     NotesUpdate,
     NotesDelete,

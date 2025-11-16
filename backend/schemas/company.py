@@ -17,6 +17,10 @@ class CompanySchema(BaseModel):
 class CompanyCreate(BaseModel):
     name: str
     description: str | None = ""
+    website: str | None
+    recruiter_name: str | None
+    recruiter_email: str | None
+    description: str | None
 
 
 # Properties to receive via API on update

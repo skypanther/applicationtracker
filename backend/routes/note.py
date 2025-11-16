@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from controllers.crud_note import crud_note
-from database import get_db
-from schemas.notes import (
+from ..controllers.crud_note import crud_note
+from ..database import get_db
+from ..schemas.notes import (
     NotesSchema,
     NotesCreate,
     NotesUpdate,

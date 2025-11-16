@@ -9,7 +9,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from database import Base
+from ..database import Base
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -33,15 +33,13 @@ class CRUDBase(
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         # return db.query(self.model).filter(self.model.id == id).first()
-        return db.query(self.model).get(id)
+        return db.get(self.model, id)
 
     def get_by_id(self, db: Session, id: int) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.job_app_id == id).first()
-        # return db.query(self.model).get(id)
 
     def get_by_name(self, db: Session, name: str) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.name == name).first()
-        # return db.query(self.model).get(id)
 
     def get_multi(
         self, db: Session, *, skip: int = 0, limit: int = 100
@@ -77,7 +75,7 @@ class CRUDBase(
         return db_obj
 
     def remove(self, db: Session, *, id: int) -> ModelType | None:
-        obj = db.query(self.model).get(id)
+        obj = db.get(self.model, id)
         db.delete(obj)
         db.commit()
         return obj
