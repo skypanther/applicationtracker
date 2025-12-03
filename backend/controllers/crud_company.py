@@ -22,6 +22,7 @@ class CRUDCompany(CRUDBase[CompanyModel, CompanyCreate, CompanyUpdate, CompanyDe
     def get_company_by_id(
         self, db: Session, *, company_id: int, as_model: bool = True
     ) -> CompanyModel:
+    
         company_model = super().get(db, id=company_id)
         company = None
         if not as_model and company_model:

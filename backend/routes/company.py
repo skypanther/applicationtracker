@@ -27,7 +27,7 @@ def update_company(
     db: Session = Depends(get_db), *, company_id: int, updated_company: CompanyUpdate
 ) -> CompanySchema | None:
     # Update the company with the given ID
-    company = crud_company.get_company_by_id(db, company_id=company_id, as_model=True)
+    company = crud_company.get_company_by_id(db, company_id=company_id)
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
     company = crud_company.update_company(

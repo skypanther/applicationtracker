@@ -8,7 +8,7 @@ from ..server import app
 from ..database import Base, get_db
 
 # SQLite database URL for testing
-SQLITE_DATABASE_URL = "sqlite:///./test_db.db"
+SQLITE_DATABASE_URL = "sqlite:///:memory:"
 
 # Create a SQLAlchemy engine
 engine = create_engine(

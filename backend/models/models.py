@@ -12,7 +12,7 @@ from sqlalchemy import (
 
 from ..database import Base
 
-
+# TODO: rewrite using Mapped[] / mapped_column()
 class CompanyModel(Base):
     __tablename__ = "companies"
 
