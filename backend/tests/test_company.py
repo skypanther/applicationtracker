@@ -1,9 +1,5 @@
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
-from ..database import get_db
 from ..server import app
-from ..schemas.company import CompanySchema
 
 client = TestClient(app)
 

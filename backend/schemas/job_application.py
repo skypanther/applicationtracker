@@ -24,10 +24,10 @@ class JobApplicationCreate(BaseModel):
 # Properties to receive via API on update
 class JobApplicationUpdate(BaseModel):
     job_app_id: int
-    job_title: str | None
-    source: str | None
-    source_url: str | None
-    stage_id: int | None
+    job_title: str | None = ""
+    source: str | None = ""
+    source_url: str | None = ""
+    stage_id: int | None = None
 
 
 # Properties to receive via API on delete

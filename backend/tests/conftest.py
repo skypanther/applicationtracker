@@ -71,3 +71,22 @@ def company_update_payload():
         "name": "Bogus Company",
         "website": "www.bogus.com"
     }
+
+@pytest.fixture()
+def job_app_payload():
+    """Mock job application payload"""
+    return {
+        "company_id": 1,
+        "job_title": "Developer",
+        "source": "LinkedIn",
+        "source_url": "https://www.linkedin.com",
+        "stage_id": 1
+
+    }
+
+@pytest.fixture()
+def job_app_update_payload():
+    return {
+        "job_app_id": 1,
+        "job_title": "Software Engineer"
+    }
