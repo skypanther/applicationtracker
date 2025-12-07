@@ -14,6 +14,12 @@ def get_companies(db: Session = Depends(get_db)) -> list[CompanySchema]:
     return companies
 
 
+@router.get("/{company_id}", response_model=CompanySchema)
+def get_company(db: Session = Depends(get_db), *, company_id: int) -> CompanySchema:
+    company = crud_company.get_company_by_id(db, company_id=company_id)
+    return company
+
+
 @router.post("/", response_model=CompanySchema)
 def create_company(
     db: Session = Depends(get_db), *, new_company: CompanyCreate
