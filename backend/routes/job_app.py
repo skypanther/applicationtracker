@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ..controllers.crud_jobapp import crud_job_app
 from ..database import get_db
 from ..schemas.job_application import (
+    JobApplicationJoined,
     JobApplicationSchema,
     JobApplicationCreate,
     JobApplicationUpdate,
@@ -21,11 +22,20 @@ def get_job_applications(db: Session = Depends(get_db)) -> list[JobApplicationSc
 
 
 # Get a specific job application by ID
-@router.get("/{job_app_id}", response_model=JobApplicationSchema)
+@router.get("/{job_app_id}", response_model=JobApplicationJoined)
 def get_job_application_by_id(
     db: Session = Depends(get_db), *, job_app_id: int
-) -> JobApplicationSchema:
+) -> JobApplicationJoined:
     job_application = crud_job_app.get_job_app_by_id(db, job_app_id=job_app_id)
+    return job_application
+
+
+# Get a specific job application by ID without joining to other tables
+@router.get("/{job_app_id}/raw", response_model=JobApplicationSchema)
+def get_raw_job_application_by_id(
+    db: Session = Depends(get_db), *, job_app_id: int
+) -> JobApplicationSchema:
+    job_application = crud_job_app.get_raw_job_app_by_id(db, job_app_id=job_app_id)
     return job_application
 
 

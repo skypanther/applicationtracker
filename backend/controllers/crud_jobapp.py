@@ -1,13 +1,15 @@
 from typing import Any, Dict, Optional, Union
 from fastapi import HTTPException
 
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .crud_base import CRUDBase
-from ..models.models import JobApplicationModel
+from ..models.models import CompanyModel, JobApplicationModel
 from ..schemas.job_application import (
     JobApplicationCreate,
+    JobApplicationJoined,
     JobApplicationUpdate,
     JobApplicationDelete,
 )
@@ -40,8 +42,37 @@ class CRUDJobApp(
             job_models.append(job_model)
         return job_models
 
-    def get_job_app_by_id(self, db: Session, *, job_app_id: int) -> JobApplicationModel:
+    def get_job_app_by_id(
+        self, db: Session, *, job_app_id: int
+    ) -> JobApplicationJoined:
+        stmt = (
+            select(self.model, CompanyModel.name)
+            .join(CompanyModel, self.model.company_id == CompanyModel.company_id)
+            .filter(self.model.job_app_id == job_app_id)
+        )
+        query_result = db.execute(stmt).first()
+        if query_result is None:
+            raise HTTPException(404)
+        jobapp, companyname = query_result.tuple()
+        job_result = {
+            "job_app_id": jobapp.job_app_id,
+            "company_id": jobapp.company_id,
+            "job_title": jobapp.job_title,
+            "source": jobapp.source,
+            "source_url": jobapp.source_url,
+            "stage_id": jobapp.stage_id,
+            "application_datetime": jobapp.application_datetime,
+            "company_name": companyname,
+        }
+        job_app_result = JobApplicationJoined(**job_result)
+        return job_app_result
+
+    def get_raw_job_app_by_id(
+        self, db: Session, *, job_app_id: int
+    ) -> JobApplicationModel:
         job_app_result = super().get_by_id(db, id=job_app_id)
+        if job_app_result is None:
+            raise HTTPException(404)
         return job_app_result
 
     def create_job_application(

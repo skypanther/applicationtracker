@@ -33,7 +33,7 @@ function submitOrUpdate() {
             }
         })
         .then(data => {
-            console.log(data);
+            // console.log(data);
         });
     emit('companyUpdated', props.company);
 }
@@ -82,7 +82,7 @@ onMounted(() => {
             <div class="form-field" id="companyFormButtonWrapper">
                 <button class="companyFormButton" id="submitUpdateButton" type="button" @click.stop="submitOrUpdate">{{
                     buttonText
-                }}</button>
+                    }}</button>
                 <button class="companyFormButton" id="newCompanyButton" type="button" @click.stop="clearForm"
                     v-if="newButtonVisible">New</button>
             </div>

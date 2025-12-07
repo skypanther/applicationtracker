@@ -33,3 +33,15 @@ class JobApplicationUpdate(BaseModel):
 # Properties to receive via API on delete
 class JobApplicationDelete(BaseModel):
     job_app_id: int
+
+
+# Joined job application
+class JobApplicationJoined(BaseModel):
+    job_app_id: int
+    company_id: int
+    job_title: str
+    source: str
+    source_url: str
+    stage_id: int
+    application_datetime: datetime
+    company_name: str

@@ -2,6 +2,8 @@
 import { onMounted, ref, getCurrentInstance } from 'vue';
 import CompanyForm from './components/CompanyForm.vue';
 import TableRow from './components/TableRow.vue';
+import Footer from './components/Footer.vue';
+import { store } from './store.js'
 
 let globalProps = getCurrentInstance().appContext.config.globalProperties;
 let jobApps = ref([]);
@@ -14,6 +16,7 @@ const getCompanies = () => {
     .then(response => response.json())
     .then(data => {
       jobApps.value = data;
+      store.setCompaniesCount(data.length);
     });
   companyListTracker = Math.random();
   company.value = {};
@@ -60,7 +63,7 @@ function clearCompany() {
       :recruiterName="jobApp.recruiter_name" :recruiterEmail="jobApp.recruiter_email" :createdAt="jobApp.created_at" />
   </table>
   <hr />
-  <p>footer with stats</p>
+  <Footer />
 </template>
 
 <style scoped></style>
