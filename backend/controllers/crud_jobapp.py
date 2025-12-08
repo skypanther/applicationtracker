@@ -46,25 +46,23 @@ class CRUDJobApp(
         self, db: Session, *, job_app_id: int
     ) -> JobApplicationJoined:
         stmt = (
-            select(self.model, CompanyModel.name)
+            select(
+                self.model.job_app_id,
+                self.model.company_id,
+                self.model.job_title,
+                self.model.source,
+                self.model.source_url,
+                self.model.stage_id,
+                self.model.application_datetime,
+                CompanyModel.name.label("company_name"),
+            )
             .join(CompanyModel, self.model.company_id == CompanyModel.company_id)
             .filter(self.model.job_app_id == job_app_id)
         )
         query_result = db.execute(stmt).first()
         if query_result is None:
             raise HTTPException(404)
-        jobapp, companyname = query_result.tuple()
-        job_result = {
-            "job_app_id": jobapp.job_app_id,
-            "company_id": jobapp.company_id,
-            "job_title": jobapp.job_title,
-            "source": jobapp.source,
-            "source_url": jobapp.source_url,
-            "stage_id": jobapp.stage_id,
-            "application_datetime": jobapp.application_datetime,
-            "company_name": companyname,
-        }
-        job_app_result = JobApplicationJoined(**job_result)
+        job_app_result = JobApplicationJoined(**query_result._asdict())
         return job_app_result
 
     def get_raw_job_app_by_id(
