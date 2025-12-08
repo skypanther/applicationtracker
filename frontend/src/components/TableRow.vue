@@ -1,19 +1,20 @@
 <script setup>
-const props = defineProps(['companyId', 'companyName', 'website', 'recruiterName', 'recruiterEmail', 'createdAt'])
+const props = defineProps(['companyId', 'jobAppId', 'jobTitle', 'companyName', 'website', 'recruiterName', 'recruiterEmail', 'createdAt'])
 
-const emit = defineEmits(['companySelected']);
+const emit = defineEmits(['jobAppSelected']);
 
-function companySelected() {
-    emit('companySelected', props.companyId);
+function jobAppSelected() {
+    emit('jobAppSelected', props.jobAppId);
 }
 
-const oddEven = props.companyId % 2 == 0 ? 'even' : 'odd';
+const oddEven = props.jobAppId % 2 == 0 ? 'even' : 'odd';
 </script>
 
 <template>
-    <tr :id="companyId" :class="oddEven" class="data-row" @click="companySelected">
-        <td>{{ companyId }}</td>
+    <tr :id="jobAppId" :class="oddEven" class="data-row" @click="jobAppSelected">
+        <td>{{ jobAppId }}</td>
         <td>{{ companyName }}</td>
+        <td>{{ jobTitle }}</td>
         <td>{{ website }}</td>
         <td>{{ recruiterName }}</td>
         <td>{{ recruiterEmail }}</td>

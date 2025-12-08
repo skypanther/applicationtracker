@@ -55,6 +55,9 @@ onMounted(() => {
     <form method="post" id="companyEntryForm">
         <input type="hidden" :value="company.company_id" />
         <div id="company-form-wrapper">
+            <div class="form-field form-label">
+                <strong>Company:</strong>
+            </div>
             <div class="form-field">
                 <label for="companyname">Company Name</label><br />
                 <input id="companyname" aria-label="Company Name" v-model="company.name" type=" text"
@@ -82,7 +85,7 @@ onMounted(() => {
             <div class="form-field" id="companyFormButtonWrapper">
                 <button class="companyFormButton" id="submitUpdateButton" type="button" @click.stop="submitOrUpdate">{{
                     buttonText
-                    }}</button>
+                }}</button>
                 <button class="companyFormButton" id="newCompanyButton" type="button" @click.stop="clearForm"
                     v-if="newButtonVisible">New</button>
             </div>
@@ -90,4 +93,11 @@ onMounted(() => {
     </form>
 </template>
 
-<style scoped></style>
+<style scoped>
+.form-label {
+    padding-top: 15px;
+    font-weight: bold;
+    border-right: 1px solid #000;
+    margin-right: 10px;
+}
+</style>

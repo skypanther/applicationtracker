@@ -3,9 +3,15 @@ import { store } from '../store.js'
 </script>
 
 <template>
-    <div>
+    <div class="footer">
+        <div>Total Applications: {{ store.applicationsCount }}</div>
         <div>Total Companies: {{ store.companiesCount }}</div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.footer {
+    display: flex;
+    column-gap: 3em;
+}
+</style>

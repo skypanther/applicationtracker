@@ -10,6 +10,7 @@ from ..models.models import CompanyModel, JobApplicationModel
 from ..schemas.job_application import (
     JobApplicationCreate,
     JobApplicationJoined,
+    JobApplicationSchema,
     JobApplicationUpdate,
     JobApplicationDelete,
 )
@@ -23,12 +24,24 @@ class CRUDJobApp(
         JobApplicationDelete,
     ]
 ):
-    def get_job_applications(self, db: Session) -> list[JobApplicationModel]:
+    def get_job_applications(self, db: Session) -> list[JobApplicationSchema]:
         # Returns all job applications, not those for a specific company
-        job_apps_result = super().get_multi(db, skip=0, limit=1000)
+        stmt = select(
+            self.model.job_app_id,
+            self.model.company_id,
+            self.model.job_title,
+            self.model.source,
+            self.model.source_url,
+            self.model.stage_id,
+            self.model.application_datetime,
+            CompanyModel.name.label("company_name"),
+            CompanyModel.recruiter_name.label("recruiter_name"),
+            CompanyModel.recruiter_email.label("recruiter_email"),
+        ).join(CompanyModel, self.model.company_id == CompanyModel.company_id)
+        query_result = db.execute(stmt).all()
         job_apps = []
-        for job_app_model in job_apps_result:
-            job_apps.append(job_app_model)
+        for row in query_result:
+            job_apps.append(JobApplicationSchema(**row._asdict()))
         return job_apps
 
     def get_job_apps_by_company_id(
