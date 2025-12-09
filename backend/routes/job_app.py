@@ -22,10 +22,10 @@ def get_job_applications(db: Session = Depends(get_db)) -> list[JobApplicationSc
 
 
 # Get a specific job application by ID
-@router.get("/{job_app_id}", response_model=JobApplicationJoined)
+@router.get("/{job_app_id}", response_model=JobApplicationSchema)
 def get_job_application_by_id(
     db: Session = Depends(get_db), *, job_app_id: int
-) -> JobApplicationJoined:
+) -> JobApplicationSchema:
     job_application = crud_job_app.get_job_app_by_id(db, job_app_id=job_app_id)
     return job_application
 
@@ -66,11 +66,11 @@ def update_job_app(
     updated_job_app: JobApplicationUpdate
 ) -> JobApplicationSchema | None:
     # Update the job_app with the given ID
-    job_app = crud_job_app.get_job_app_by_id(db, job_app_id=job_app_id)
-    if not job_app:
+    old_job_app = crud_job_app.get_job_app_by_id(db, job_app_id=job_app_id)
+    if not old_job_app:
         raise HTTPException(status_code=404, detail="Job application not found")
     job_app = crud_job_app.update_job_app(
-        db, job_app_obj=job_app, updated_job_app_obj=updated_job_app
+        db, job_app_obj=old_job_app, updated_job_app_obj=updated_job_app
     )
     return job_app
 

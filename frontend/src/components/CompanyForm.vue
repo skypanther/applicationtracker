@@ -4,13 +4,13 @@ import { onMounted, ref, getCurrentInstance } from 'vue';
 let globalProps = getCurrentInstance().appContext.config.globalProperties;
 
 let props = defineProps(['company']);
-let buttonText = ref("Submit");
-var newButtonVisible = false;
+let buttonText = ref("Add");
+var clearButtonVisible = false;
 
 const emit = defineEmits(['companyUpdated', 'clearCompany']);
 
 function submitOrUpdate() {
-    if (newButtonVisible) {
+    if (clearButtonVisible) {
         // the button's visible so we're updating a record
         var url = `${globalProps.urlBase}/company/${props.company.company_id}`
         var requestOptions = {
@@ -45,7 +45,7 @@ function clearForm() {
 onMounted(() => {
     if (props.company && props.company.company_id != undefined) {
         buttonText.value = "Update";
-        newButtonVisible = true;
+        clearButtonVisible = true;
     }
 });
 
@@ -86,8 +86,8 @@ onMounted(() => {
                 <button class="companyFormButton" id="submitUpdateButton" type="button" @click.stop="submitOrUpdate">{{
                     buttonText
                 }}</button>
-                <button class="companyFormButton" id="newCompanyButton" type="button" @click.stop="clearForm"
-                    v-if="newButtonVisible">New</button>
+                <button class="companyFormButton" id="clearCompanyButton" type="button" @click.stop="clearForm"
+                    v-if="clearButtonVisible">Clear</button>
             </div>
         </div>
     </form>

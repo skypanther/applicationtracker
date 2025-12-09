@@ -3,9 +3,10 @@ import { onMounted, ref, getCurrentInstance } from 'vue';
 
 let globalProps = getCurrentInstance().appContext.config.globalProperties;
 
-let props = defineProps(['jobApp']);
-let buttonText = ref("Submit");
-var newButtonVisible = false;
+let props = defineProps(['jobApp', 'stages']);
+let buttonText = ref("Add");
+let companies = ref([]);
+var clearButtonVisible = false;
 var updatedOrAddedJobAppId = null;
 
 const emit = defineEmits(['jobAppUpdated', 'clearJobApp']);
@@ -18,22 +19,21 @@ function submitOrUpdate() {
         "source_url": props.jobApp.source_url,
         "stage_id": parseInt(props.jobApp.stage_id)
     };
-    if (newButtonVisible) {
+    if (clearButtonVisible) {
         modifiedJobApp["job_app_id"] = parseInt(props.jobApp.job_app_id);
         // the button's visible so we're updating a record
         var url = `${globalProps.urlBase}/job_app/${modifiedJobApp.job_app_id}`
         var requestOptions = {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify(modifiedJobApp)
         };
         updatedOrAddedJobAppId = modifiedJobApp.job_app_id;
     } else {
-        console.log('here')
         var url = `${globalProps.urlBase}/job_app`
         var requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify(modifiedJobApp)
         }
     }
@@ -45,14 +45,15 @@ function submitOrUpdate() {
             return response.json()
         })
         .then(data => {
-            console.log('AppForm.vue', data);
-            if (!newButtonVisible) {
+            // console.log('AppForm.vue', data);
+            if (!clearButtonVisible) {
                 updatedOrAddedJobAppId = data.job_app_id
             }
         });
+    let isEdited = true;
     setTimeout(() => {
-        console.log('updatedOrAddedJobAppId', updatedOrAddedJobAppId);
-        emit('jobAppUpdated', updatedOrAddedJobAppId);
+        // console.log('updatedOrAddedJobAppId', updatedOrAddedJobAppId);
+        emit('jobAppUpdated', updatedOrAddedJobAppId, isEdited);
     }, 100);
 }
 
@@ -61,9 +62,15 @@ function clearForm() {
 }
 
 onMounted(() => {
+    fetch(`${globalProps.urlBase}/company`)
+        .then(response => response.json())
+        .then(data => {
+            companies.value = data;
+        });
+
     if (props.jobApp && props.jobApp.job_app_id != undefined) {
         buttonText.value = "Update";
-        newButtonVisible = true;
+        clearButtonVisible = true;
     }
 });
 
@@ -83,9 +90,14 @@ onMounted(() => {
             </div>
 
             <div class="form-field">
-                <label for="companyid">Company ID</label><br />
-                <input id="companyid" aria-label="Company ID" v-model="jobApp.company_id" type=" text"
-                    placeholder="Company ID" />
+                <label for="company">Company Name</label><br />
+                <select v-model="jobApp.company_id" aria-placeholder="Select a company">
+                    <option disabled value="">Please select one</option>
+                    <option v-for="company in companies" :value="company.company_id">
+                        {{ company.name }}
+                    </option>
+                </select>
+
             </div>
 
             <div class="form-field">
@@ -100,17 +112,21 @@ onMounted(() => {
             </div>
 
             <div class="form-field">
-                <label for="stageId">Stage ID</label><br />
-                <input id="stageId" aria-label="Stage ID" v-model="jobApp.stage_id" type=" text"
-                    placeholder="Stage ID" />
+                <label for="stageId">Stage</label><br />
+                <select v-model="jobApp.stage_id" aria-placeholder="Select a stage">
+                    <option disabled value="">Please select one</option>
+                    <option v-for="stage in stages" :value="stage.stage_id">
+                        {{ stage.name }}
+                    </option>
+                </select>
             </div>
 
             <div class="form-field" id="companyFormButtonWrapper">
                 <button class="companyFormButton" id="submitUpdateButton" type="button" @click.stop="submitOrUpdate">{{
                     buttonText
-                }}</button>
-                <button class="companyFormButton" id="newJobAppButton" type="button" @click.stop="clearForm"
-                    v-if="newButtonVisible">New</button>
+                    }}</button>
+                <button class="companyFormButton" id="clearJobAppButton" type="button" @click.stop="clearForm"
+                    v-if="clearButtonVisible">Clear</button>
             </div>
         </div>
     </form>

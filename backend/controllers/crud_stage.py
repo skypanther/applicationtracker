@@ -27,7 +27,7 @@ class CRUDStage(
         for stage_model in stages_result:
             if not getattr(stage_model, "is_deleted"):
                 stages.append(stage_model)
-        stages.sort(key=lambda x: x.name)
+        stages.sort(key=lambda x: x.stage_id)
         return stages
 
     def get_stage_by_id(self, db: Session, *, stage_id: int) -> StageModel:

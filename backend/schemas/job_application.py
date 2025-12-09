@@ -31,6 +31,8 @@ class JobApplicationUpdate(BaseModel):
     source: str | None = ""
     source_url: str | None = ""
     stage_id: int | None = None
+    company_id: int | None = None
+    company_name: str | None = None
 
 
 # Properties to receive via API on delete
@@ -42,9 +44,11 @@ class JobApplicationDelete(BaseModel):
 class JobApplicationJoined(BaseModel):
     job_app_id: int
     company_id: int
-    job_title: str
-    source: str
-    source_url: str
+    job_title: str | None
+    source: str | None
+    source_url: str | None
     stage_id: int
     application_datetime: datetime
-    company_name: str
+    company_name: str | None = ""
+    recruiter_name: str | None = ""
+    recruiter_email: str | None = ""

@@ -55,9 +55,7 @@ class CRUDJobApp(
             job_models.append(job_model)
         return job_models
 
-    def get_job_app_by_id(
-        self, db: Session, *, job_app_id: int
-    ) -> JobApplicationJoined:
+    def get_job_app_by_id(self, db: Session, *, job_app_id: int) -> JobApplicationModel:
         stmt = (
             select(
                 self.model.job_app_id,
@@ -67,7 +65,6 @@ class CRUDJobApp(
                 self.model.source_url,
                 self.model.stage_id,
                 self.model.application_datetime,
-                CompanyModel.name.label("company_name"),
             )
             .join(CompanyModel, self.model.company_id == CompanyModel.company_id)
             .filter(self.model.job_app_id == job_app_id)
@@ -75,7 +72,8 @@ class CRUDJobApp(
         query_result = db.execute(stmt).first()
         if query_result is None:
             raise HTTPException(404)
-        job_app_result = JobApplicationJoined(**query_result._asdict())
+        # job_app_result = JobApplicationSchema(**query_result._asdict())
+        job_app_result = JobApplicationModel(**query_result._asdict())
         return job_app_result
 
     def get_raw_job_app_by_id(
@@ -103,12 +101,17 @@ class CRUDJobApp(
         db: Session,
         *,
         job_app_obj: JobApplicationModel,
-        updated_job_app_obj: Union[JobApplicationUpdate, Dict[str, Any]],
+        updated_job_app_obj: JobApplicationUpdate,
     ) -> JobApplicationModel:
-        job_app_model = super().update(
-            db, db_obj=job_app_obj, obj_in=updated_job_app_obj
-        )
-        return job_app_model
+        updated_job_app = updated_job_app_obj.__dict__
+        updated_job_app.__delitem__("company_name")
+        db.query(JobApplicationModel).filter(
+            JobApplicationModel.job_app_id == job_app_obj.job_app_id
+        ).update(updated_job_app)
+        db.commit()
+        job_app_result = self.get_job_app_by_id(db, job_app_id=job_app_obj.job_app_id)
+        # job_app_result = JobApplicationModel(**query_result._asdict())
+        return job_app_result
 
     def remove_job_app(self, db: Session, *, job_app_id: int) -> JobApplicationModel:
         job_app_model = super().remove(db, id=job_app_id)
