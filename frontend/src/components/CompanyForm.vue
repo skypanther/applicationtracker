@@ -35,7 +35,10 @@ function submitOrUpdate() {
         .then(data => {
             // console.log(data);
         });
-    emit('companyUpdated', props.company);
+    let isEdited = true;
+    setTimeout(() => {
+        emit('companyUpdated', props.company.company_id, isEdited);
+    }, 100);
 }
 
 function clearForm() {
