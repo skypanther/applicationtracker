@@ -124,7 +124,7 @@ onMounted(() => {
             <div class="form-field" id="companyFormButtonWrapper">
                 <button class="companyFormButton" id="submitUpdateButton" type="button" @click.stop="submitOrUpdate">{{
                     buttonText
-                    }}</button>
+                }}</button>
                 <button class="companyFormButton" id="clearJobAppButton" type="button" @click.stop="clearForm"
                     v-if="clearButtonVisible">Clear</button>
             </div>

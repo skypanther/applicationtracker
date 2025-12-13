@@ -141,3 +141,7 @@ td, th {
   background-color:crimson;
   color: white;
 }
+#tab-wrapper {
+  border: 1px solid var(--vt-c-divider-light-2);
+  border-top: none;
+}
